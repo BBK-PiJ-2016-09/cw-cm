@@ -13,7 +13,7 @@ public class ContactImplTests {
     @Test
     public void getIdTest() {
         Contact testContact = new ContactImpl("contactName");
-        assertEquals(testContact.getId(), 1);
+        assertEquals(testContact.getId(), 2);
 
     }
 }
