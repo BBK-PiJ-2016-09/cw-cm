@@ -6,9 +6,11 @@
  * may want to save about them.
  */
 public class ContactImpl implements Contact {
-    
-    public ContactImpl() {
+    private String contactName;
 
+
+    public ContactImpl(String name) {
+        this.contactName = name;
     }
 
     /**
@@ -27,7 +29,7 @@ public class ContactImpl implements Contact {
      * @return the name of the contact.
      */
     public String getName() {
-        return "";
+        return this.contactName;
     }
 
     /**

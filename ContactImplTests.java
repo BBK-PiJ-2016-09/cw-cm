@@ -6,7 +6,7 @@ public class ContactImplTests {
 
     @Test
     public void getNameTest() {
-        Contact testContact = new ContactImpl();
+        Contact testContact = new ContactImpl("contactName");
         assertEquals(testContact.getName(), "contactName");
 
     }
