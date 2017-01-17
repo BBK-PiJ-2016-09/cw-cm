@@ -6,6 +6,7 @@
  * may want to save about them.
  */
 public class ContactImpl implements Contact {
+    
     public ContactImpl() {
 
     }
@@ -16,7 +17,7 @@ public class ContactImpl implements Contact {
      * @return the ID of the contact.
      */
 
-    public int getId(){
+    public int getId() {
         return 1;
     }
 
@@ -25,7 +26,7 @@ public class ContactImpl implements Contact {
      *
      * @return the name of the contact.
      */
-    public String getName(){
+    public String getName() {
         return "";
     }
 
@@ -46,5 +47,7 @@ public class ContactImpl implements Contact {
      *
      * @param note the notes to be added
      */
-    public void addNotes(String note) {}
+    public void addNotes(String note) {
+
+    }
 }
