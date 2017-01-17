@@ -10,4 +10,10 @@ public class ContactImplTests {
         assertEquals(testContact.getName(), "contactName");
 
     }
+    @Test
+    public void getIdTest() {
+        Contact testContact = new ContactImpl("contactName");
+        assertEquals(testContact.getId(), 1);
+
+    }
 }
