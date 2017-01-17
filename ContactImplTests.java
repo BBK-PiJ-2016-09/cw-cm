@@ -3,17 +3,23 @@ import static org.junit.Assert.*;
 
 public class ContactImplTests {
 
+    Contact testContact = new ContactImpl("contactName");
+
 
     @Test
     public void getNameTest() {
-        Contact testContact = new ContactImpl("contactName");
         assertEquals(testContact.getName(), "contactName");
 
     }
     @Test
     public void getIdTest() {
-        Contact testContact = new ContactImpl("contactName");
-        assertEquals(testContact.getId(), 2);
+        assertEquals(testContact.getId(), 3);
+
+    }
+    @Test
+    public void addAndGetNotesTest() {
+        testContact.addNotes("Some notes on this contact");
+        assertEquals(testContact.getNotes(), "Some notes on this contact");
 
     }
 }
