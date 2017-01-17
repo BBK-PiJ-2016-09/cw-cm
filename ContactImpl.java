@@ -7,10 +7,16 @@
  */
 public class ContactImpl implements Contact {
     private String contactName;
+    private int contactId;
+    public static int totalContacts = 0;
 
+    private String contactNotes = "";
 
     public ContactImpl(String name) {
+        totalContacts ++;
         this.contactName = name;
+        this.contactId = totalContacts;
+
     }
 
     /**
@@ -20,7 +26,7 @@ public class ContactImpl implements Contact {
      */
 
     public int getId() {
-        return 1;
+        return contactId;
     }
 
     /**
@@ -41,7 +47,7 @@ public class ContactImpl implements Contact {
      * @return a string with notes about the contact, maybe empty.
      */
     public String getNotes() {
-        return "";
+        return this.contactNotes;
     }
 
     /**
@@ -50,6 +56,7 @@ public class ContactImpl implements Contact {
      * @param note the notes to be added
      */
     public void addNotes(String note) {
+        contactNotes = note;
 
     }
 }
