@@ -4,11 +4,12 @@ import java.util.*;
 
 public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
 
-
-    public PastMeetingImpl(Calendar date, Set<Contact> contactsSet){
+    private String meetingNotes = "";
+    public PastMeetingImpl(Calendar date, Set<Contact> contactsSet, String notes){
         super(date, contactsSet);
+        meetingNotes = notes;
     }
     public String getNotes() {
-        return "";
+        return meetingNotes;
     }
 }

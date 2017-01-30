@@ -4,17 +4,12 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.*;
 
-public class MeetingImplTests {
+public class PastMeetingImplTests {
 
     Calendar myDate = Calendar.getInstance();
     Contact testContact = new ContactImpl("contactName");
     Set<Contact> testContactSet = new HashSet<>();
     PastMeeting testMeeting = new PastMeetingImpl(myDate, testContactSet, "Some notes about the meeting");
-
-    @Test
-    public void getMeetingIdTest() {
-        assertEquals(testMeeting.getId(), 4);
-    }
 
     @Test
     public void getDateTest() {
@@ -27,13 +22,18 @@ public class MeetingImplTests {
         Meeting meetingWithContacts = new MeetingImpl(myDate, testContactSet);
         assertEquals(testMeeting.getContacts(), testContactSet);
     }
-    @Test
-    public void getDateTest() {
-        assertEquals(testMeeting.getDate(), myDate);
-    }
+
 
     @Test
-    public Contact getNotesTest() {
+    public void getNotesNotEmptyTest() {
         assertEquals(testMeeting.getNotes(), "Some notes about the meeting");
     }
+
+
+    @Test
+    public void getEmptyNotesTest() {
+        assertEquals((new PastMeetingImpl(myDate, testContactSet, "")).getNotes(), "");
+    }
+
+
 }
