@@ -7,15 +7,13 @@ import java.util.*;
 public class MeetingImplTests {
 
     Calendar myDate = Calendar.getInstance();
-    Meeting testMeeting = new MeetingImpl(myDate);
     Contact testContact = new ContactImpl("contactName");
     Set<Contact> testContactSet = new HashSet<>();
-
-
+    Meeting testMeeting = new MeetingImpl(myDate, testContactSet);
 
     @Test
     public void getMeetingIdTest() {
-        assertEquals(testMeeting.getId(), 3);
+        assertEquals(testMeeting.getId(), 4);
     }
 
     @Test
@@ -24,7 +22,9 @@ public class MeetingImplTests {
     }
     @Test
     public void getContactsTest() {
+
         testContactSet.add(testContact);
+        Meeting meetingWithContacts = new MeetingImpl(myDate, testContactSet);
         assertEquals(testMeeting.getContacts(), testContactSet);
     }
 }

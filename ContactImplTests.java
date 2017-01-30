@@ -9,7 +9,6 @@ public class ContactImplTests {
     @Test
     public void getNameTest() {
         assertEquals(testContact.getName(), "contactName");
-
     }
     @Test
     public void getIdTest() {
