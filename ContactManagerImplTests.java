@@ -12,11 +12,9 @@ public class ContactManagerImplTests {
         Calendar myDate = Calendar.getInstance();
         Contact testContact = new ContactImpl("contactName");
         Set<Contact> testContactSet = new HashSet<>();
-        FutureMeeting testMeeting = new FutureMeetingImpl(myDate, testContactSet);
-
         ContactManagerImpl testContactManager = new ContactManagerImpl();
-        testContactManager.addFutureMeeting(testContactSet, myDate);
 
-        assertEquals(testContactManager.addFutureMeeting(testContactSet, myDate), testMeeting.getId());
+        assertEquals(testContactManager.addFutureMeeting(myDate, testContactSet), 1);
     }
+    
 }

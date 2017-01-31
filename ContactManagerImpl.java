@@ -2,7 +2,9 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.*;
 
-public class ContactManagerImpl{
+public class ContactManagerImpl {
+
+    private ArrayList<FutureMeeting> futureMeetings = new ArrayList<FutureMeeting>();
     /**
      * Add a new meeting to be held in the future.
      *
@@ -16,9 +18,10 @@ public class ContactManagerImpl{
      *       in the past, of if any contact is unknown / non-existent.
      * @throws NullPointerException if the meeting or the date are null
      */
-    public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-        return 65;
-
+    public int addFutureMeeting(Calendar date, Set<Contact> contacts) {
+        FutureMeeting futureMeetingToBeAdded = new FutureMeetingImpl(date, contacts);
+        futureMeetings.add(futureMeetingToBeAdded);
+        return futureMeetingToBeAdded.getId();
     }
 
 
