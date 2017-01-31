@@ -3,8 +3,8 @@ import java.util.Set;
 import java.util.*;
 
 public class ContactManagerImpl {
+    private Map<Integer, FutureMeeting> futureMeetings = new HashMap<Integer, FutureMeeting>();
 
-    private ArrayList<FutureMeeting> futureMeetings = new ArrayList<FutureMeeting>();
     /**
      * Add a new meeting to be held in the future.
      *
@@ -20,9 +20,13 @@ public class ContactManagerImpl {
      */
     public int addFutureMeeting(Calendar date, Set<Contact> contacts) {
         FutureMeeting futureMeetingToBeAdded = new FutureMeetingImpl(date, contacts);
-        futureMeetings.add(futureMeetingToBeAdded);
+        futureMeetings.put(futureMeetingToBeAdded.getId(), futureMeetingToBeAdded);
         return futureMeetingToBeAdded.getId();
     }
 
+
+    public FutureMeeting getFutureMeeting(int id){
+        return futureMeetings.get(id);
+    }
 
 }
