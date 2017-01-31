@@ -56,7 +56,10 @@ public class ContactImpl implements Contact {
      * @param note the notes to be added
      */
     public void addNotes(String note) {
-        contactNotes = note;
-
+        if (contactNotes == ""){
+            contactNotes = note;
+        } else {
+            contactNotes += "\n" + note;
+        }
     }
 }

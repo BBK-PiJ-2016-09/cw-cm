@@ -35,5 +35,12 @@ public class PastMeetingImplTests {
         assertEquals((new PastMeetingImpl(myDate, testContactSet, "")).getNotes(), "");
     }
 
+    @Test
+    public void addNotesTest() {
+        PastMeeting newMeeting = new PastMeetingImpl(myDate, testContactSet, "Some notes about the meeting");
+        newMeeting.addNotes("Some additional notes");
+        assertEquals(newMeeting.getNotes(), "Some notes about the meeting\nSome additional notes");
+    }
+
 
 }
