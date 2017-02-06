@@ -21,7 +21,7 @@ public class MeetingImplTests {
         assertEquals(testMeeting.getDate(), myDate);
     }
     @Test
-    public void getContactsTest() {
+    public void addNewContactTest() {
 
         testContactSet.add(testContact);
         Meeting meetingWithContacts = new MeetingImpl(myDate, testContactSet);
