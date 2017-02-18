@@ -103,7 +103,10 @@ public class ContactManagerImplTests {
         }
         assertEquals("a contact name", found.getName());
     }
-
+    @Test(expected=NullPointerException.class)
+    public void getContactsByNameWhenNameIsEmptyTest() {
+        Set<Contact> setToCompare = testContactManager.getContacts("");
+    }
 
     /*@Test
     public void addNewContactTest() {
@@ -129,5 +132,15 @@ public class ContactManagerImplTests {
         Integer testContactId = testContactManager.addNewContact(null, null);
     }
 
-
+    /**
+     * Returns the meeting with the requested ID, or null if it there is none.
+     *
+     * @param id the ID for the meeting
+     * @return the meeting with the requested ID, or null if it there is none.
+     */
+    @Test
+    public void getMeetingTest() {
+        Meeting testMeeting = testContactManager.getMeeting(futureMeetingToBeAdded.getId());
+        assertEquals(testMeeting, futureMeetingToBeAdded);
+    }
 }

@@ -53,6 +53,20 @@ public class ContactManagerImpl {
 
 
     /**
+     * Returns the meeting with the requested ID, or null if it there is none.
+     *
+     * @param id the ID for the meeting
+     * @return the meeting with the requested ID, or null if it there is none.
+     */
+    public Meeting getMeeting(int id){
+        Calendar currentDate = Calendar.getInstance();
+        Set<Contact> emptySet = new HashSet<Contact>();
+        return new MeetingImpl(currentDate, emptySet);
+
+    }
+
+
+    /**
      * Create a new contact with the specified name and notes.
      *
      * @param name the name of the contact.
@@ -111,7 +125,17 @@ public class ContactManagerImpl {
 
 
      public Set<Contact> getContacts(String name) throws NullPointerException {
-          return new HashSet<Contact>();
+         if(name == "") {
+             throw new NullPointerException("Contact name is empty");
+         }
+         Set<Contact> setToReturn = new HashSet<Contact>();
+         for (int contactId: contacts.keySet()) {
+             if(contacts.get(contactId).getName() != null){
+                 setToReturn.add(contacts.get(contactId));
+             }
+         }
+         return setToReturn;
+
 //        Set<Contact> setToReturn = new HashSet<Contact>;
 
 
