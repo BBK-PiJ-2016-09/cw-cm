@@ -190,6 +190,8 @@ public class ContactManagerImpl {
      * @return the list of meetings
      * @throws NullPointerException if the date are null
      */
-    List<Meeting> getMeetingListOn(Calendar date);
+    public List<Meeting> getMeetingListOn(Calendar date) throws NullPointerException {
+        throw new NullPointerException();
+    }
 
 }

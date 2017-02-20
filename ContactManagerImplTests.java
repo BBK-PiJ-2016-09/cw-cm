@@ -17,9 +17,7 @@ public class ContactManagerImplTests {
     public void initialize() {
         currentDate = Calendar.getInstance();
         currentDate.add(Calendar.DATE, 15);
-
         testContact = new ContactImpl("contactName");
-
         testContactSet = new HashSet<Contact>();
         testContactManager = new ContactManagerImpl();
         testContactId = testContactManager.addNewContact("a contact name", "some contact notes");
@@ -31,9 +29,6 @@ public class ContactManagerImplTests {
     public void addFutureMeetingTest() {
         assertEquals(testContactManager.addFutureMeeting(currentDate, testContactSet), futureMeetingToBeAddedId + 1);
     }
-
-
-
 
     @Test
     public void getContactsByIDTest() {
@@ -58,7 +53,6 @@ public class ContactManagerImplTests {
         }
         assertEquals("a contact name", found.getName());
     }
-
 
     @Test
     public void getFutureMeetingTest() {
@@ -134,18 +128,6 @@ public class ContactManagerImplTests {
         assertEquals(futureMeetingToBeAddedId, testContactManager.getMeeting(futureMeetingToBeAddedId).getId());
     }
 
-    /**
-     * Returns the list of future meetings scheduled with this contact.
-     *
-     * If there are none, the returned list will be empty. Otherwise,
-     * the list will be chronologically sorted and will not contain any
-     * duplicates.
-     *
-     * @param contact one of the user’s contacts
-     * @return the list of future meeting(s) scheduled with this contact (maybe empty).
-     * @throws IllegalArgumentException if the contact does not exist
-     * @throws NullPointerException if the contact is null
-     */
     @Test
     public void getMeetingList() {
         assertEquals(futureMeetingToBeAddedId, testContactManager.getMeeting(futureMeetingToBeAddedId).getId());
@@ -187,7 +169,18 @@ public class ContactManagerImplTests {
      * @return the list of meetings
      * @throws NullPointerException if the date are null
      */
-    List<Meeting> getMeetingListOn(Calendar date);
+    @Test
+    public void getMeetingListONDateTest() {
+        Set<Contact> registeredContactSet = testContactManager.getContacts(testContactId);
+
+        int futureMeetingForThisTestId = testContactManager.addFutureMeeting(currentDate, registeredContactSet);
+        assertEquals(testContactManager.getMeetingListOn(currentDate).get(0), testContactManager.getMeeting(futureMeetingForThisTestId)) ;
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getMeetingListONNullDateTest() {
+        testContactManager.getMeetingListOn(null);
+    }
 
 
 
