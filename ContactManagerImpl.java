@@ -34,12 +34,10 @@ public class ContactManagerImpl {
             throw new IllegalArgumentException();
         }
         if(validateContacts(contacts)){
-        //if(contactsUnknown) {
-             FutureMeeting futureMeetingToBeAdded = new FutureMeetingImpl(date, contacts);
-                futureMeetings.put(futureMeetingToBeAdded.getId(), futureMeetingToBeAdded);
-                return futureMeetingToBeAdded.getId();
-        //   }
-    //}
+            FutureMeeting futureMeetingToBeAdded = new FutureMeetingImpl(date, contacts);
+            futureMeetings.put(futureMeetingToBeAdded.getId(), futureMeetingToBeAdded);
+            return futureMeetingToBeAdded.getId();
+
         }
         throw new IllegalArgumentException();
 
@@ -114,7 +112,7 @@ public class ContactManagerImpl {
         }
         Set<Contact> setToReturn = new HashSet<Contact>();
         for(int i=0; i < ids.length;i++) {
-            if(contacts.get(ids[i]) == null){
+            if(contacts.get(ids[i]) == null) {
                 throw new IllegalArgumentException("Contact id not found " + ids[i]);
             }
             setToReturn.add(contacts.get(ids[i]));
@@ -134,22 +132,64 @@ public class ContactManagerImpl {
      */
 
 
-     public Set<Contact> getContacts(String name) throws NullPointerException {
-         if(name == "") {
-             throw new NullPointerException("Contact name is empty");
-         }
-         Set<Contact> setToReturn = new HashSet<Contact>();
-         for (int contactId: contacts.keySet()) {
-             if(contacts.get(contactId).getName() != null){
-                 setToReturn.add(contacts.get(contactId));
-             }
-         }
-         return setToReturn;
+    public Set<Contact> getContacts(String name) throws NullPointerException {
+        if(name == "") {
+            throw new NullPointerException("Contact name is empty");
+        }
+        Set<Contact> setToReturn = new HashSet<Contact>();
+        for (int contactId: contacts.keySet()) {
+            if(contacts.get(contactId).getName() != null){
+                setToReturn.add(contacts.get(contactId));
+            }
+        }
+        return setToReturn;
+    }
 
-//        Set<Contact> setToReturn = new HashSet<Contact>;
 
+    /**
+     * Returns the list of future meetings scheduled with this contact.
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param contact one of the user’s contacts
+     * @return the list of future meeting(s) scheduled with this contact (maybe empty).
+     * @throws IllegalArgumentException if the contact does not exist
+     * @throws NullPointerException if the contact is null
+     */
+    public List<Meeting> getFutureMeetingList(Contact contact) throws IllegalArgumentException, NullPointerException {
+        List<Meeting> meetingList = new ArrayList<Meeting>();
+        if(contact == null) {
+            throw new NullPointerException("Contact is null");
+        }
+        try {
+            getContacts(contact.getId());
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException("Contact not found when getting futureMeetingList, contact: ");
+        }
+        for (int meetingId: futureMeetings.keySet()) {
+            futureMeetings.get(meetingId);
+            if(futureMeetings.get(meetingId).getContacts().contains(contact)) {
+                meetingList.add(getMeeting((meetingId)));
+            }
+        }
+        return meetingList;
 
-     }
+    }
 
+    /**
+     * Returns the list of meetings that are scheduled for, or that took
+     * place on, the specified date
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param date the date
+     * @return the list of meetings
+     * @throws NullPointerException if the date are null
+     */
+    List<Meeting> getMeetingListOn(Calendar date);
 
 }

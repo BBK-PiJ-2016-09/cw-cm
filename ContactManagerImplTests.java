@@ -134,6 +134,61 @@ public class ContactManagerImplTests {
         assertEquals(futureMeetingToBeAddedId, testContactManager.getMeeting(futureMeetingToBeAddedId).getId());
     }
 
+    /**
+     * Returns the list of future meetings scheduled with this contact.
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param contact one of the user’s contacts
+     * @return the list of future meeting(s) scheduled with this contact (maybe empty).
+     * @throws IllegalArgumentException if the contact does not exist
+     * @throws NullPointerException if the contact is null
+     */
+    @Test
+    public void getMeetingList() {
+        assertEquals(futureMeetingToBeAddedId, testContactManager.getMeeting(futureMeetingToBeAddedId).getId());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getFutureMeetingWithInexistentContactTest() {
+        Contact unRegisteredContact = new ContactImpl("ContactName");
+        testContactManager.getFutureMeetingList(unRegisteredContact);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getFutureMeetingWithNullContactTest() {
+        testContactManager.getFutureMeetingList(null);
+    }
+
+    @Test
+    public void getFutureMeetingList() {
+        Set<Contact> registeredContactSet = testContactManager.getContacts(testContactId);
+        Contact registeredContact = null;
+        for (Contact contact: registeredContactSet) {
+            if(contact.getId() == testContactId){
+                registeredContact = contact;
+            }
+        }
+        int futureMeetingForThisTestId = testContactManager.addFutureMeeting(currentDate, registeredContactSet);
+        assertEquals(testContactManager.getFutureMeetingList(registeredContact).get(0).getId(), futureMeetingForThisTestId);
+    }
+
+    /**
+     * Returns the list of meetings that are scheduled for, or that took
+     * place on, the specified date
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param date the date
+     * @return the list of meetings
+     * @throws NullPointerException if the date are null
+     */
+    List<Meeting> getMeetingListOn(Calendar date);
+
 
 
 }
