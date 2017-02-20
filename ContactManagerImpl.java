@@ -6,7 +6,7 @@ public class ContactManagerImpl {
     private Map<Integer, FutureMeeting> futureMeetings = new HashMap<Integer, FutureMeeting>();
     private Map<Integer, Contact> contacts = new HashMap<Integer, Contact>();
     private Map<String, Integer> contactName2Id = new HashMap<String, Integer>();
-
+    private Map<Integer, PastMeeting> pastMeetings = new HashMap<Integer, PastMeeting>();
     private boolean validateContacts(Set<Contact> contactsToValidate) {
         for (Contact contact : contactsToValidate) {
             if(contacts.get(contact.getId()) == null) {
@@ -58,11 +58,20 @@ public class ContactManagerImpl {
      * @param id the ID for the meeting
      * @return the meeting with the requested ID, or null if it there is none.
      */
-    public Meeting getMeeting(int id){
-        Calendar currentDate = Calendar.getInstance();
-        Set<Contact> emptySet = new HashSet<Contact>();
-        return new MeetingImpl(currentDate, emptySet);
+    public Meeting getMeeting(int id) {
+        for (int meetingId: futureMeetings.keySet()) {
+            if(meetingId == id) {
+                return futureMeetings.get(meetingId);
+            }
 
+        }
+        for (int meetingId: pastMeetings.keySet()) {
+            if(meetingId == id){
+                return pastMeetings.get(meetingId);
+            }
+
+        }
+        return null;
     }
 
 
@@ -77,7 +86,8 @@ public class ContactManagerImpl {
      */
     public int addNewContact(String name, String notes) throws NullPointerException, IllegalArgumentException {
         if(notes == null || name == null) {
-            throw new NullPointerException();
+            throw new NullPointerException(" Notes or name can not be null");
+
         }
         if(notes == "" || name == "") {
             throw new IllegalArgumentException();
