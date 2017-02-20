@@ -3,10 +3,8 @@ import java.util.Set;
 import java.util.*;
 
 public class ContactManagerImpl {
-    private Map<Integer, FutureMeeting> futureMeetings = new HashMap<Integer, FutureMeeting>();
+    private Map<Integer, Meeting> meetings = new HashMap<Integer, Meeting>();
     private Map<Integer, Contact> contacts = new HashMap<Integer, Contact>();
-    private Map<String, Integer> contactName2Id = new HashMap<String, Integer>();
-    private Map<Integer, PastMeeting> pastMeetings = new HashMap<Integer, PastMeeting>();
     private boolean validateContacts(Set<Contact> contactsToValidate) {
         for (Contact contact : contactsToValidate) {
             if(contacts.get(contact.getId()) == null) {
@@ -15,6 +13,7 @@ public class ContactManagerImpl {
         }
         return true;
     }
+
 
     /**
      * Add a new meeting to be held in the future.
@@ -33,20 +32,17 @@ public class ContactManagerImpl {
         if(Calendar.getInstance().after(date)) {
             throw new IllegalArgumentException();
         }
-        if(validateContacts(contacts)){
+        if(validateContacts(contacts)) {
             FutureMeeting futureMeetingToBeAdded = new FutureMeetingImpl(date, contacts);
-            futureMeetings.put(futureMeetingToBeAdded.getId(), futureMeetingToBeAdded);
+            meetings.put(futureMeetingToBeAdded.getId(), futureMeetingToBeAdded);
             return futureMeetingToBeAdded.getId();
-
         }
         throw new IllegalArgumentException();
-
-
     }
 
 
     public FutureMeeting getFutureMeeting(int id) {
-        return futureMeetings.get(id);
+        return (FutureMeeting) meetings.get(id);
     }
 
 
@@ -57,19 +53,7 @@ public class ContactManagerImpl {
      * @return the meeting with the requested ID, or null if it there is none.
      */
     public Meeting getMeeting(int id) {
-        for (int meetingId: futureMeetings.keySet()) {
-            if(meetingId == id) {
-                return futureMeetings.get(meetingId);
-            }
-
-        }
-        for (int meetingId: pastMeetings.keySet()) {
-            if(meetingId == id){
-                return pastMeetings.get(meetingId);
-            }
-
-        }
-        return null;
+        return meetings.get(id);
     }
 
 
@@ -93,7 +77,6 @@ public class ContactManagerImpl {
         Contact newContact = new ContactImpl(name);
         newContact.addNotes(notes);
         contacts.put(newContact.getId(), newContact);
-        contactName2Id.put(name, newContact.getId());
         return newContact.getId();
     }
 
@@ -133,7 +116,7 @@ public class ContactManagerImpl {
 
 
     public Set<Contact> getContacts(String name) throws NullPointerException {
-        if(name == "") {
+        if(name == null) {
             throw new NullPointerException("Contact name is empty");
         }
         Set<Contact> setToReturn = new HashSet<Contact>();
@@ -168,14 +151,29 @@ public class ContactManagerImpl {
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Contact not found when getting futureMeetingList, contact: ");
         }
-        for (int meetingId: futureMeetings.keySet()) {
-            futureMeetings.get(meetingId);
-            if(futureMeetings.get(meetingId).getContacts().contains(contact)) {
-                meetingList.add(getMeeting((meetingId)));
+        return getMeetings(contact);
+
+    }
+
+
+    private List<Meeting> getMeetings(Calendar date) {
+        List<Meeting> meetingsToReturn = new ArrayList<Meeting>();
+        for (Meeting meeting: meetings.values()) {
+            if(meeting.getDate() == date) {
+                meetingsToReturn.add(meeting);
             }
         }
-        return meetingList;
+        return meetingsToReturn;
+    }
 
+    private List<Meeting> getMeetings(Contact contact) {
+        List<Meeting> meetingsToReturn = new ArrayList<Meeting>();
+        for (Meeting meeting: meetings.values()) {
+            if(meeting.getContacts().contains(contact)) {
+                meetingsToReturn.add(meeting);
+            }
+        }
+        return meetingsToReturn;
     }
 
     /**
@@ -191,7 +189,47 @@ public class ContactManagerImpl {
      * @throws NullPointerException if the date are null
      */
     public List<Meeting> getMeetingListOn(Calendar date) throws NullPointerException {
+        if(date == null) {
+            throw new NullPointerException("Date for getMeetingListOn is null");
+        } else {
+            return getMeetings(date);
+        }
+
+    }
+    /**
+     * Returns the list of past meetings in which this contact has participated.
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param contact one of the user’s contacts
+     * @return the list of Past meeting(s) scheduled with this contact (maybe empty).
+     * @throws IllegalArgumentException if the contact does not exist
+     * @throws NullPointerException if the contact is null
+     */
+    public List<PastMeeting> getPastMeetingListFor(Contact contact) throws NullPointerException,
+            IllegalArgumentException{
+        throw new IllegalArgumentException();
+
+    }
+
+    /**
+     * Create a new record for a meeting that took place in the past.
+     *
+     * @param contacts a set of participants
+     * @param date the date on which the meeting took place
+     * @param text messages to be added about the meeting.
+     * @return the ID for the meeting
+     * @throws IllegalArgumentException if the list of contacts is
+     *     empty, if any of the contacts does not exist, or if
+     *     the date provided is in the future
+     * @throws NullPointerException if any of the arguments is null
+     */
+    public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) throws IllegalArgumentException,
+            NullPointerException{
         throw new NullPointerException();
+
     }
 
 }

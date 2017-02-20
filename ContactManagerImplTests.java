@@ -64,7 +64,8 @@ public class ContactManagerImplTests {
 
     @Test(expected=NullPointerException.class)
     public void getContactsByNameWhenNameIsEmptyTest() {
-        Set<Contact> setToCompare = testContactManager.getContacts("");
+        String argument = null;
+        Set<Contact> setToCompare = testContactManager.getContacts(argument);
     }
 
 
@@ -172,9 +173,10 @@ public class ContactManagerImplTests {
     @Test
     public void getMeetingListONDateTest() {
         Set<Contact> registeredContactSet = testContactManager.getContacts(testContactId);
-
-        int futureMeetingForThisTestId = testContactManager.addFutureMeeting(currentDate, registeredContactSet);
-        assertEquals(testContactManager.getMeetingListOn(currentDate).get(0), testContactManager.getMeeting(futureMeetingForThisTestId)) ;
+        Calendar futureMeetingDate = Calendar.getInstance();
+        futureMeetingDate.add(Calendar.DATE, 66);
+        int futureMeetingForThisTestId = testContactManager.addFutureMeeting(futureMeetingDate, registeredContactSet);
+        assertEquals(testContactManager.getMeetingListOn(futureMeetingDate).get(0).getId(), futureMeetingForThisTestId) ;
     }
 
     @Test(expected = NullPointerException.class)
@@ -182,6 +184,16 @@ public class ContactManagerImplTests {
         testContactManager.getMeetingListOn(null);
     }
 
-
+    @Test
+    public void getPastMeetingListForTest() {
+        Set<Contact> registeredContactSet2 = testContactManager.getContacts(testContactId);
+        Contact registeredContact2 = null;
+        for (Contact contact: registeredContactSet2) {
+            if(contact.getId() == testContactId){
+                registeredContact2 = contact;
+            }
+        }
+        assertEquals(testContactManager.getPastMeetingListFor(registeredContact2).get(0), 3);
+    }
 
 }
