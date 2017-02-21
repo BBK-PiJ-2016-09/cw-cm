@@ -197,8 +197,8 @@ public class ContactManagerImplTests {
         assertEquals(testContactManager.addNewPastMeeting(testContactSet, pastDate, ""), pastMeetingToBeAddedId + 1);
     }
 
-    /*@Test
-    public void addPastMeetingNotesTest() {
-        assertEquals(testContactManager.addPastMeetingNotes(testContactSet, pastDate, ""), pastMeetingToBeAddedId + 1);
-    }*/
+    @Test
+    public void addMeetingNotesTest() {
+        assertEquals(testContactManager.addMeetingNotes(testContactSet, pastDate, ""), pastMeetingToBeAddedId + 1);
+    }
 }
