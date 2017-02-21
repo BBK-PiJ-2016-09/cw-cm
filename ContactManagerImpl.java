@@ -3,18 +3,52 @@ import java.util.Set;
 import java.util.*;
 
 public class ContactManagerImpl {
-    private Map<Integer, Meeting> meetings = new HashMap<Integer, Meeting>();
+    public Map<Integer, Meeting> meetings = new HashMap<Integer, Meeting>();
     private Map<Integer, Contact> contacts = new HashMap<Integer, Contact>();
+
+
+    private boolean validateContact(Contact contact) {
+        return (contacts.get(contact.getId()) != null);
+    }
     private boolean validateContacts(Set<Contact> contactsToValidate) {
-        for (Contact contact : contactsToValidate) {
-            if(contacts.get(contact.getId()) == null) {
+        Iterator<Contact> iterator = contactsToValidate.iterator();
+        while(iterator.hasNext()) {
+            if(!validateContact(iterator.next())) {
                 return false;
             }
         }
         return true;
     }
 
+    private boolean validateContacts(Collection<Contact> contactsToValidate) {
+        Set<Contact> contactsSet = new HashSet<Contact>(contactsToValidate);
+        return validateContacts(contactsSet);
 
+    }
+
+
+    /**
+     * Create a new contact with the specified name and notes.
+     *
+     * @param name the name of the contact.
+     * @param notes notes to be added about the contact.
+     * @return the ID for the new contact
+     * @throws IllegalArgumentException if the name or the notes are empty strings
+     * @throws NullPointerException if the name or the notes are null
+     */
+
+    public int addNewContact(String name, String notes) throws NullPointerException, IllegalArgumentException {
+        if(notes == null || name == null) {
+            throw new NullPointerException(" Notes or name can not be null");
+        } if(notes == "" || name == "") {
+            throw new IllegalArgumentException();
+        } else {
+            Contact newContact = new ContactImpl(name);
+            newContact.addNotes(notes);
+            contacts.put(newContact.getId(), newContact);
+            return newContact.getId();
+        }
+    }
     /**
      * Add a new meeting to be held in the future.
      *
@@ -28,16 +62,21 @@ public class ContactManagerImpl {
      *       in the past, of if any contact is unknown / non-existent.
      * @throws NullPointerException if the meeting or the date are null
      */
-    public int addFutureMeeting(Calendar date, Set<Contact> contacts) throws IllegalArgumentException {
+
+    public int addFutureMeeting(Set<Contact> contacts, Calendar date) throws IllegalArgumentException {
         if(Calendar.getInstance().after(date)) {
-            throw new IllegalArgumentException();
-        }
-        if(validateContacts(contacts)) {
+            throw new IllegalArgumentException("Trying to add a future meeting in the past");
+        } if(contacts == null) {
+            throw new IllegalArgumentException("Could not validate contacts");
+        } if(date == null ) {
+            throw new NullPointerException("Date is null");
+        } if(!validateContacts(contacts)) {
+            throw new IllegalArgumentException("Could not validate contacts");
+        } else {
             FutureMeeting futureMeetingToBeAdded = new FutureMeetingImpl(date, contacts);
             meetings.put(futureMeetingToBeAdded.getId(), futureMeetingToBeAdded);
             return futureMeetingToBeAdded.getId();
         }
-        throw new IllegalArgumentException();
     }
 
 
@@ -57,28 +96,6 @@ public class ContactManagerImpl {
     }
 
 
-    /**
-     * Create a new contact with the specified name and notes.
-     *
-     * @param name the name of the contact.
-     * @param notes notes to be added about the contact.
-     * @return the ID for the new contact
-     * @throws IllegalArgumentException if the name or the notes are empty strings
-     * @throws NullPointerException if the name or the notes are null
-     */
-    public int addNewContact(String name, String notes) throws NullPointerException, IllegalArgumentException {
-        if(notes == null || name == null) {
-            throw new NullPointerException(" Notes or name can not be null");
-
-        }
-        if(notes == "" || name == "") {
-            throw new IllegalArgumentException();
-        }
-        Contact newContact = new ContactImpl(name);
-        newContact.addNotes(notes);
-        contacts.put(newContact.getId(), newContact);
-        return newContact.getId();
-    }
 
     /**
      * Returns a set containing the contacts that correspond to the IDs.
@@ -89,18 +106,20 @@ public class ContactManagerImpl {
      * @throws IllegalArgumentException if no IDs are provided or if
      *     any of the provided IDs does not correspond to a real contact
      */
-    public  Set<Contact> getContacts(int... ids) throws IllegalArgumentException{
+    public  Set<Contact> getContacts(int... ids) throws IllegalArgumentException {
         if(ids.length == 0) {
             throw new IllegalArgumentException("Contact ids are empty");
-        }
-        Set<Contact> setToReturn = new HashSet<Contact>();
-        for(int i=0; i < ids.length;i++) {
-            if(contacts.get(ids[i]) == null) {
-                throw new IllegalArgumentException("Contact id not found " + ids[i]);
+        } else {
+            Set<Contact> setToReturn = new HashSet<Contact>();
+            for (int i : ids) {
+                setToReturn.add(contacts.get(i));
+                if(contacts.get(i) == null){
+                    throw new IllegalArgumentException("Contact not found");
+
+                }
             }
-            setToReturn.add(contacts.get(ids[i]));
+            return setToReturn;
         }
-        return setToReturn;
     }
 
     /**
@@ -121,11 +140,42 @@ public class ContactManagerImpl {
         }
         Set<Contact> setToReturn = new HashSet<Contact>();
         for (int contactId: contacts.keySet()) {
-            if(contacts.get(contactId).getName() != null){
+            if(contacts.get(contactId).getName() != null) {
                 setToReturn.add(contacts.get(contactId));
             }
         }
         return setToReturn;
+    }
+
+    /**
+     * Returns the list of past meetings in which this contact has participated.
+     *
+     * If there are none, the returned list will be empty. Otherwise,
+     * the list will be chronologically sorted and will not contain any
+     * duplicates.
+     *
+     * @param contact one of the user’s contacts
+     * @return the list of Past meeting(s) scheduled with this contact (maybe empty).
+     * @throws IllegalArgumentException if the contact does not exist
+     * @throws NullPointerException if the contact is null
+     */
+    public List<PastMeeting> getPastMeetingListFor(Contact contact) throws NullPointerException, IllegalArgumentException {
+        if(contact == null) {
+            throw new NullPointerException("Contact is null ");
+        } if(contacts.get(contact.getId()) == null) {
+            throw new IllegalArgumentException("Contact is null ");
+        } else {
+            List<Meeting> meetingsToFilter = getMeetings(contact);
+            List<PastMeeting> meetingsToReturn = new ArrayList<PastMeeting>();
+            for(Meeting meetingToFilter : meetingsToFilter){
+                if (! (meetingToFilter instanceof FutureMeeting)) {
+                    meetingsToReturn.add((PastMeeting) meetingToFilter);
+                }
+            }
+            return meetingsToReturn;
+        }
+
+
     }
 
 
@@ -141,17 +191,24 @@ public class ContactManagerImpl {
      * @throws IllegalArgumentException if the contact does not exist
      * @throws NullPointerException if the contact is null
      */
+
     public List<Meeting> getFutureMeetingList(Contact contact) throws IllegalArgumentException, NullPointerException {
         List<Meeting> meetingList = new ArrayList<Meeting>();
         if(contact == null) {
             throw new NullPointerException("Contact is null");
-        }
-        try {
+        } try {
             getContacts(contact.getId());
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Contact not found when getting futureMeetingList, contact: ");
         }
-        return getMeetings(contact);
+        List<Meeting> meetingsToFilter = getMeetings(contact);
+        List<Meeting> meetingsToReturn = new ArrayList<Meeting>();
+        for(Meeting meetingToFilter : meetingsToFilter){
+            if (meetingToFilter instanceof FutureMeeting) {
+                meetingsToReturn.add((Meeting) meetingToFilter);
+            }
+        }
+        return meetingsToReturn;
 
     }
 
@@ -196,23 +253,7 @@ public class ContactManagerImpl {
         }
 
     }
-    /**
-     * Returns the list of past meetings in which this contact has participated.
-     *
-     * If there are none, the returned list will be empty. Otherwise,
-     * the list will be chronologically sorted and will not contain any
-     * duplicates.
-     *
-     * @param contact one of the user’s contacts
-     * @return the list of Past meeting(s) scheduled with this contact (maybe empty).
-     * @throws IllegalArgumentException if the contact does not exist
-     * @throws NullPointerException if the contact is null
-     */
-    public List<PastMeeting> getPastMeetingListFor(Contact contact) throws NullPointerException,
-            IllegalArgumentException{
-        throw new IllegalArgumentException();
 
-    }
 
     /**
      * Create a new record for a meeting that took place in the past.
@@ -226,10 +267,19 @@ public class ContactManagerImpl {
      *     the date provided is in the future
      * @throws NullPointerException if any of the arguments is null
      */
-    public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) throws IllegalArgumentException,
-            NullPointerException{
-        throw new NullPointerException();
-
+    public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) throws IllegalArgumentException, NullPointerException {
+        if(!Calendar.getInstance().after(date)) {
+            throw new IllegalArgumentException("Date for past meeting is NOT in the past");
+        } if(contacts.size() == 0) {
+            throw new IllegalArgumentException("Contact set has no elements");
+        } if(!validateContacts(contacts)) {
+            throw new IllegalArgumentException("Contacts are not valid");
+        } else {
+            PastMeeting pastMeetingToBeAdded = new PastMeetingImpl(date, contacts, text);
+            meetings.put(pastMeetingToBeAdded.getId(), pastMeetingToBeAdded);
+            return pastMeetingToBeAdded.getId();
+        }
     }
+
 
 }
