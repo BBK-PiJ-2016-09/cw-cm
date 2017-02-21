@@ -174,8 +174,6 @@ public class ContactManagerImpl {
             }
             return meetingsToReturn;
         }
-
-
     }
 
 
@@ -209,9 +207,7 @@ public class ContactManagerImpl {
             }
         }
         return meetingsToReturn;
-
     }
-
 
     private List<Meeting> getMeetings(Calendar date) {
         List<Meeting> meetingsToReturn = new ArrayList<Meeting>();
@@ -251,7 +247,6 @@ public class ContactManagerImpl {
         } else {
             return getMeetings(date);
         }
-
     }
 
 
@@ -280,6 +275,48 @@ public class ContactManagerImpl {
             return pastMeetingToBeAdded.getId();
         }
     }
+    /**
+     * Add notes to a meeting.
+     *
+     * This method is used when a future meeting takes place, and is
+     * then converted to a past meeting (with notes) and returned.
+     *
+     * It can be also used to add notes to a past meeting at a later date.
+     *
+     * @param id the ID of the meeting
+     * @param text messages to be added about the meeting.
+     * @throws IllegalArgumentException if the meeting does not exist
+     * @throws IllegalStateException if the meeting is set for a date in the future
+     * @throws NullPointerException if the notes are null
+     */
+    public PastMeeting addMeetingNotes(int id, String text) throws IllegalArgumentException, IllegalStateException, NullPointerException {
+        if(text == null) {
+            throw new NullPointerException("Meeting notes are null");
+        }
+        Meeting meeting = getMeeting(id);
+        PastMeetingImpl newMeeting;
+        if(meeting == null) {
+            throw new IllegalArgumentException("Meeting not found");
+        } if(!Calendar.getInstance().after(meeting.getDate())) {
+            throw new IllegalStateException("Meeting has not yet taken place");
+        } if(meeting instanceof PastMeeting) {
+            newMeeting = (PastMeetingImpl) meeting;
+            newMeeting.addNotes(text);
+        } if(meeting instanceof FutureMeeting) {
+            int newMeetingId = addNewPastMeeting(meeting.getContacts(), meeting.getDate(), text);
+            newMeeting = (PastMeetingImpl) getMeeting(newMeetingId);
+            meetings.remove(id);
+        } else {
+            throw new IllegalArgumentException("Meeting is not of type FutureMeeting or PastMeeting");
+        }
+        meeting = newMeeting;
+        return newMeeting;
+    }
 
+    void flush(){
+        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName));
+        output.writeObject(contacts);
+        output.writeObject(meetings);-
+    }
 
 }

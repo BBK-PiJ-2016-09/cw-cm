@@ -4,6 +4,7 @@ import java.util.*;
 
 import org.junit.*;
 import static org.junit.Assert.*;
+import java.util.concurrent.TimeUnit;
 
 public class ContactManagerImplTests {
     private Calendar currentDate;
@@ -197,8 +198,37 @@ public class ContactManagerImplTests {
         assertEquals(testContactManager.addNewPastMeeting(testContactSet, pastDate, ""), pastMeetingToBeAddedId + 1);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void addMeetingNotesIdNotFoundTest() {
+        testContactManager.addMeetingNotes(432423423, "NOTES");
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void addMeetingNotesNullTextTest() {
+        testContactManager.addMeetingNotes(pastMeetingToBeAddedId, null);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void addMeetingNotesToFutureMeetingTest() {
+        testContactManager.addMeetingNotes(futureMeetingToBeAddedId, "NOTES");
+    }
+
     @Test
     public void addMeetingNotesTest() {
-        assertEquals(testContactManager.addMeetingNotes(testContactSet, pastDate, ""), pastMeetingToBeAddedId + 1);
+        Calendar rightNowDate = Calendar.getInstance();
+        rightNowDate.add(Calendar.SECOND, 1);
+        int aReallyImminentMeetingId = testContactManager.addFutureMeeting(testContactSet, rightNowDate);
+        try {
+            Thread.sleep(2000);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        PastMeeting MeetingInThePast = testContactManager.addMeetingNotes(aReallyImminentMeetingId, "NOTES");
+        assertEquals(MeetingInThePast.getDate(), rightNowDate);
+        assertEquals(MeetingInThePast.getNotes(), "NOTES");
+        assertEquals(MeetingInThePast.getId(), aReallyImminentMeetingId + 1);
+        assertEquals(testContactManager.getMeetingListOn(rightNowDate).get(0), MeetingInThePast);
     }
+
+
 }
