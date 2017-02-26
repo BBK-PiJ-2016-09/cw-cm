@@ -1,11 +1,39 @@
 import java.util.Calendar;
 import java.util.Set;
 import java.util.*;
+import java.io.*;
+import java.io.Serializable;
 
 public class ContactManagerImpl {
     public Map<Integer, Meeting> meetings = new HashMap<Integer, Meeting>();
     private Map<Integer, Contact> contacts = new HashMap<Integer, Contact>();
+    private String saveFileName = "defaultSaveFile.txt";
+    private static final long serialVersionUID = 33L;
+    
+    ContactManagerImpl() {
+        ObjectInputStream inputFile = null;
+        try {
+            inputFile =  new ObjectInputStream(new FileInputStream(saveFileName));
+            meetings=(HashMap<Integer, Meeting>)inputFile.readObject();
+            contacts=(HashMap<Integer, Contact>)inputFile.readObject();
 
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        } finally {
+            if (inputFile != null) {
+                try {
+                    inputFile.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+    }
 
     private boolean validateContact(Contact contact) {
         return (contacts.get(contact.getId()) != null);
@@ -313,10 +341,30 @@ public class ContactManagerImpl {
         return newMeeting;
     }
 
-    void flush(){
-        ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(fileName));
-        output.writeObject(contacts);
-        output.writeObject(meetings);-
+    void flush() {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(new FileOutputStream(saveFileName));
+            out.writeObject(meetings);
+            out.writeObject(contacts);
+
+            out.flush();
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+
+
     }
 
 }

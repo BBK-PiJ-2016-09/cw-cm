@@ -5,7 +5,9 @@
  * a name (not necessarily unique), and notes that the user
  * may want to save about them.
  */
-public class ContactImpl implements Contact {
+import java.io.Serializable;
+
+public class ContactImpl implements Contact, Serializable {
     private String contactName;
     private int contactId;
     public static int totalContacts = 0;
