@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 import java.util.Calendar;
 import java.util.Set;
 import java.util.*;
-
+import ../main/java/PastMeetingImpl
 public class PastMeetingImplTests {
 
     Calendar myDate = Calendar.getInstance();
