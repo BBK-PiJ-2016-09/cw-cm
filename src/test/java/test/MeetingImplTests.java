@@ -1,3 +1,9 @@
+package test;
+
+import impl.ContactImpl;
+import impl.MeetingImpl;
+import specs.Contact;
+import specs.Meeting;
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.util.Calendar;
@@ -8,7 +14,7 @@ public class MeetingImplTests {
 
     Calendar myDate = Calendar.getInstance();
     Contact testContact = new ContactImpl("contactName");
-    Set<Contact> testContactSet = new HashSet<>();
+    Set<Contact> testContactSet = new HashSet<Contact>();
     Meeting testMeeting = new MeetingImpl(myDate, testContactSet);
 
     @Test

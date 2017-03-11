@@ -1,10 +1,15 @@
+package test;
+
 import java.util.Calendar;
 import java.util.Set;
 import java.util.*;
 
+import impl.ContactImpl;
+import impl.ContactManagerImpl;
+import specs.Contact;
+import specs.PastMeeting;
 import org.junit.*;
 import static org.junit.Assert.*;
-import java.util.concurrent.TimeUnit;
 
 public class ContactManagerImplTests {
     private Calendar currentDate;
@@ -117,7 +122,6 @@ public class ContactManagerImplTests {
         testContactManager.getContacts(b);
     }
 
-
     @Test
     public void getUnexistentMeetingTest() {
         assertEquals(null, testContactManager.getMeeting(312312431));
@@ -138,20 +142,10 @@ public class ContactManagerImplTests {
         testContactManager.getFutureMeetingList(null);
     }
 
-
     @Test(expected = NullPointerException.class)
     public void getMeetingListOnNullDateTest() {
         testContactManager.getMeetingListOn(null);
     }
-
-
-
-
-
-
-
-
-
 
     @Test
     public void getPastMeetingListForTest() {
@@ -177,7 +171,7 @@ public class ContactManagerImplTests {
 
     @Test
     public void getMeetingListONDateTest() {
-        assertEquals(testContactManager.getMeetingListOn(futureDate).get(0).getId(), futureMeetingToBeAddedId) ;
+        assertEquals(testContactManager.getMeetingListOn(futureDate).get(0).getId(), futureMeetingToBeAddedId);
     }
 
     @Test
