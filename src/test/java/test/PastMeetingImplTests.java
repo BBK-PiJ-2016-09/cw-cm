@@ -1,3 +1,11 @@
+package test;
+
+import impl.ContactImpl;
+import impl.MeetingImpl;
+import impl.PastMeetingImpl;
+import specs.Contact;
+import specs.Meeting;
+import specs.PastMeeting;
 import org.junit.*;
 import static org.junit.Assert.*;
 import java.util.Calendar;
@@ -8,7 +16,7 @@ public class PastMeetingImplTests {
 
     Calendar myDate = Calendar.getInstance();
     Contact testContact = new ContactImpl("contactName");
-    Set<Contact> testContactSet = new HashSet<>();
+    Set<Contact> testContactSet = new HashSet<Contact>();
     PastMeeting testMeeting = new PastMeetingImpl(myDate, testContactSet, "Some notes about the meeting");
 
     @Test
@@ -37,7 +45,7 @@ public class PastMeetingImplTests {
 
     @Test
     public void addNotesTest() {
-        PastMeeting newMeeting = new PastMeetingImpl(myDate, testContactSet, "Some notes about the meeting");
+        PastMeetingImpl newMeeting = new PastMeetingImpl(myDate, testContactSet, "Some notes about the meeting");
         newMeeting.addNotes("Some additional notes");
         assertEquals(newMeeting.getNotes(), "Some notes about the meeting\nSome additional notes");
     }

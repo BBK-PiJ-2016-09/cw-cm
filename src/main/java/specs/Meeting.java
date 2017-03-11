@@ -1,5 +1,8 @@
+package specs;
+
 import java.util.Calendar;
 import java.util.Set;
+
 /**
  * A class to represent meetings
  *

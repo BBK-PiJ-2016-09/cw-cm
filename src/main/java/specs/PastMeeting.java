@@ -1,3 +1,5 @@
+package specs;
+
 /**
  * A meeting that was held in the past.
  *

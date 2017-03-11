@@ -1,8 +1,11 @@
+package impl;
+
 import java.io.Serializable;
+import specs.Contact;
 
 /**
  * A contact is a person we are making business with or may do in the future.
- *
+ * <p></p>
  * Contacts have an ID (unique, a non-zero positive integer),
  * a name (not necessarily unique), and notes that the user
  * may want to save about them.
@@ -29,10 +32,11 @@ public final class ContactImpl implements Contact, Serializable {
 
 
   /**
-    * Get total contacts.
-    *
+   * Get total contacts.
+   *
+   * @return the total number of contacts.
   */
-  public getTotalContacts() {
+  public int getTotalContacts() {
     return totalContacts;
   }
 
@@ -41,7 +45,7 @@ public final class ContactImpl implements Contact, Serializable {
    * @param newValue the new value to assign
   */
   public void setTotalContact(final int newValue) {
-    totalContact = newValue;
+    totalContacts = newValue;
   }
 
   /**
@@ -76,7 +80,7 @@ public final class ContactImpl implements Contact, Serializable {
 
   /**
     * Returns our notes about the contact, if any.
-    *
+    * <p></p>
     * If we have not written anything about the contact, the empty
     * string is returned.
     *
