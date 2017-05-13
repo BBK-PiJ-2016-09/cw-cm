@@ -1,1 +1,19 @@
+Please look at the general comments to see if any apply.
 
+Consider using ?: when
+
+public void addNotes(final String notes) {
+    if (meetingNotes == "") {
+      meetingNotes = notes;
+    } else {
+      meetingNotes += "\n" + notes;
+    }
+  }
+
+Excellent documentation.
+
+Good set of tests.
+
+Correct structure.
+
+Excellent submission. Distinction.
